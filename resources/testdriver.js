@@ -15,7 +15,8 @@
     }
 
     function getPointerInteractablePaintTree(element) {
-        if (!window.document.contains(element)) {
+        let document = element.ownerDocument;
+        if (!document.contains(element)) {
             return [];
         }
 
@@ -95,14 +96,6 @@
          *                    the cases the WebDriver command errors
          */
         click: function(element) {
-            if (window.top !== window) {
-                return Promise.reject(new Error("can only click in top-level window"));
-            }
-
-            if (!window.document.contains(element)) {
-                return Promise.reject(new Error("element in different document or shadow tree"));
-            }
-
             if (!inView(element)) {
                 element.scrollIntoView({behavior: "instant",
                                         block: "end",
@@ -137,10 +130,6 @@
         send_keys: function(element, keys) {
             if (window.top !== window) {
                 return Promise.reject(new Error("can only send keys in top-level window"));
-            }
-
-            if (!window.document.contains(element)) {
-                return Promise.reject(new Error("element in different document or shadow tree"));
             }
 
             if (!inView(element)) {
